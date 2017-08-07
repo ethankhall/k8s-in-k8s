@@ -14,10 +14,10 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
     mkdir /etc/kubernetes && \
     mkdir /etc/kubernetes/pki
 
-ENV MASTER_IP "127.0.0.1"
+ENV MASTER_URL "https://127.0.0.1:6443"
 ENV ETCD_SERVERS "http://127.0.0.1:2379"
 EXPOSE 10251
 
-COPY exec-scripts/kube-master.sh /kube-master.sh
+COPY exec-scripts/kube-control-plane-master.sh /kube-control-plane-master.sh
 COPY certs/ca.pem certs/worker.pem certs/worker-key.pem /etc/kubernetes/pki/
-ENTRYPOINT /kube-master.sh
+ENTRYPOINT /kube-control-plane-master.sh

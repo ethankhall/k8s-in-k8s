@@ -9,10 +9,10 @@ Vagrant.configure("2") do |config|
   
   config.vm.box = "centos/7"
 
-  (0..0).each do |i|
+  (0..1).each do |i|
     config.vm.define vm_name = "centos%d" % i do |box|
       box.vm.provider "vmware_fusion" do |v|
-        v.vmx["memsize"] = "512"
+        v.vmx["memsize"] = "768"
         v.vmx["numvcpus"] = "1"
       end
 
@@ -36,6 +36,14 @@ Vagrant.configure("2") do |config|
         s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'IP_ADDR' => "172.17.4.#{i+100}" }
       end
     
+      if i == 0
+        box.vm.provision "shell" do |s|
+          s.path = "scripts/control-plane-cluster.sh"
+          s.privileged = true
+          s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'IP_ADDR' => "172.17.4.#{i+100}" }
+        end
+      end
+
     end
   end
 end

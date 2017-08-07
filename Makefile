@@ -1,7 +1,5 @@
 export REGISTRY=localhost
 
-.PHONY: clean
-
 define remove_postfix
 $(shell echo $(1) | sed 's/\..*//g')
 endef
@@ -14,18 +12,23 @@ define find_dockerfile
 docker-files/$(call remove_postfix,$(1)).Dockerfile
 endef
 
-certs/kubeconfig:
-	./generate-certs.sh $(MY_IP)
+ifndef MY_IP
+$(error MY_IP is not set)
+endif
 
-%.docker: certs/kubeconfig
+certs/$(MY_IP):
+	./generate-certs.sh $(MY_IP)
+	touch certs/$(MY_IP)
+
+%.docker: certs/$(MY_IP)
 	docker build -t $(call make_tag_name,$@) --file $(call find_dockerfile,$@) .
 
-%.push: certs/kubeconfig
+%.push: certs/$(MY_IP)
 	docker push $(call make_tag_name,$@)
 
-all: clean kube-api-server.docker etcd.docker kube-controller-manager.docker kube-master.docker kube-proxy.docker kube-scheduler.docker
+all: certs/$(MY_IP) kube-api-server.docker etcd.docker kube-controller-manager.docker kube-control-plane-master.docker kube-proxy.docker kube-scheduler.docker
 
-push: all kube-api-server.push etcd.push kube-controller-manager.push kube-master.push kube-proxy.push kube-scheduler.push
+push: all kube-api-server.push etcd.push kube-controller-manager.push kube-control-plane-master.push kube-proxy.push kube-scheduler.push
 
 clean:
 	rm -rf certs
@@ -44,7 +47,7 @@ etcd.local: etcd.docker
 kube-controller-manager.local: kube-controller-manager.docker
 	docker run -it --rm --env MASTER_IP=$(MY_IP) $(call make_tag_name,$@)
 
-kube-master.local: kube-master.docker
+kube-control-plane-master.local: kube-control-plane-master.docker
 	docker run -it --rm --env -p 10251:10251 ETCD_SERVERS=http://$(MY_IP):2379 --env IP_ADDR=$(MY_IP) $(call make_tag_name,$@)
 
 kube-proxy.local: kube-proxy.docker

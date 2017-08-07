@@ -23,5 +23,6 @@ kube-apiserver \
     --advertise-address=${IP_ADDR} \
     --etcd-servers=${ETCD_SERVERS} \
     --runtime-config=admissionregistration.k8s.io/v1alpha1 \
+    --bind-address 0.0.0.0 \
     --v=2
     #--authorization-mode=RBAC,Node \

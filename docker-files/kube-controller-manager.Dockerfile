@@ -15,7 +15,7 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
     mkdir /etc/kubernetes/pki
 
 RUN mkdir /etc/kubernetes/manifests
-ENV MASTER_IP "127.0.0.1"
+ENV MASTER_URL "https://127.0.0.1:6443"
 
 COPY exec-scripts/kube-controller-manager.sh /kube-controller-manager.sh
 COPY certs/ca.pem certs/worker.pem certs/worker-key.pem /etc/kubernetes/pki/

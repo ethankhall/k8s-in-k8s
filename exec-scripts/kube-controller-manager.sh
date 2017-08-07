@@ -6,7 +6,7 @@ kind: Config
 clusters:
   - cluster:
       certificate-authority: /etc/kubernetes/pki/ca.pem
-      server: https://${MASTER_IP}:6443
+      server: ${MASTER_URL}
     name: kubernetes
 contexts:
   - context:

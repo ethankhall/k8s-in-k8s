@@ -4,7 +4,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 mkdir -p $DIR/certs
 cd $DIR/certs
 
-MASTER_IP=$1
+if [ "$#" -ne 1 ]; then
+    echo "Illegal number of parameters"
+fi
+
+export MASTER_IP=$1
+echo "The local IP is: ${MASTER_IP}"
 
 cat <<EOF > ca-config.json
 {
@@ -126,12 +131,12 @@ kind: Config
 users:
 - name: bootcfg-user
   user:
-    client-certificate-file: ${DIR}/certs/admin.pem
-    client-key-file: ${DIR}/certs/admin-key.pem
+    client-certificate: ${DIR}/certs/admin.pem
+    client-key: ${DIR}/certs/admin-key.pem
 clusters:
 - name: bootcfg-cluster
   cluster:
-    certificate-authority-file: ${DIR}/certs/ca.pem
+    certificate-authority: ${DIR}/certs/ca.pem
     server: https://${MASTER_IP}:6443
 contexts:
 - context:
