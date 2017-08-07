@@ -10,13 +10,19 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
     echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     echo "http://dl-5.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "http://dl-5.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --no-cache docker curl bash coreutils kubernetes && \
+    apk add --no-cache curl bash coreutils kubernetes && \
     mkdir /etc/kubernetes && \
-    mkdir /etc/kubernetes/pki
+    mkdir /etc/kubernetes/pki &&  \
+    rm /usr/bin/hyperkube /usr/bin/kube-apiserver /usr/bin/kubelet \
+        /usr/bin/kube-scheduler /usr/bin/kubectl \
+        /usr/bin/kubefed /usr/bin/kubeadm /usr/bin/kube-proxy /usr/bin/kube-aggregator
 
+ARG ROOT_CA_IP
 RUN mkdir /etc/kubernetes/manifests
 ENV MASTER_URL "https://127.0.0.1:6443"
 
 COPY exec-scripts/kube-controller-manager.sh /kube-controller-manager.sh
-COPY certs/ca.pem certs/worker.pem certs/worker-key.pem /etc/kubernetes/pki/
+COPY ["certs/$ROOT_CA_IP/ca.pem", "certs/$ROOT_CA_IP/worker.pem", \
+    "certs/$ROOT_CA_IP/worker-key.pem", "/etc/kubernetes/pki/"]"
+
 ENTRYPOINT /kube-controller-manager.sh

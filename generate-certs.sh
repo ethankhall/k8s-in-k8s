@@ -1,8 +1,6 @@
 #!/bin/bash -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-mkdir -p $DIR/certs
-cd $DIR/certs
 
 if [ "$#" -ne 1 ]; then
     echo "Illegal number of parameters"
@@ -10,6 +8,10 @@ fi
 
 export MASTER_IP=$1
 echo "The local IP is: ${MASTER_IP}"
+mkdir -p $DIR/certs/${MASTER_IP}
+cd $DIR/certs/${MASTER_IP}
+
+CERT_DIR=$(pwd)
 
 cat <<EOF > ca-config.json
 {
@@ -125,18 +127,18 @@ echo '{
   ]
 }' | cfssl gencert -ca=ca.pem  -ca-key=ca-key.pem  -config=ca-config.json -profile=client - | cfssljson -bare admin
 
-cat << EOF > $DIR/certs/kubeconfig
+cat << EOF > kubeconfig
 apiVersion: v1
 kind: Config
 users:
 - name: bootcfg-user
   user:
-    client-certificate: ${DIR}/certs/admin.pem
-    client-key: ${DIR}/certs/admin-key.pem
+    client-certificate: ${CERT_DIR}/admin.pem
+    client-key: ${CERT_DIR}/admin-key.pem
 clusters:
 - name: bootcfg-cluster
   cluster:
-    certificate-authority: ${DIR}/certs/ca.pem
+    certificate-authority: ${CERT_DIR}/ca.pem
     server: https://${MASTER_IP}:6443
 contexts:
 - context:
@@ -145,3 +147,12 @@ contexts:
   name: bootcfg-context
 current-context: bootcfg-context
 EOF
+
+cat << EOF > kubectl-local.sh
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+KUBECONFIG="${KUBECONFIG}:${DIR}/kubeconfig" kubectl --context bootcfg-context "$@"
+EOF
+
+chmod +x kubectl-local.sh

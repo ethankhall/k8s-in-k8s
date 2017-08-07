@@ -20,7 +20,7 @@ cat << EOF >/etc/systemd/system/kube-controller-manager.service
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kube-controller-manager-pod.uuid
 ExecStart=/usr/bin/rkt run quay.io/ethankhall/kube-controller-manager:latest \
     --uuid-file-save=/var/run/kube-controller-manager-pod.uuid \
-    --environment=MASTER_URL=https://${IP_ADDR}:6443 \
+    --environment=MASTER_URL=https://${IP_ADDR}:6443
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kube-controller-manager-pod.uuid
 Restart=always
 RestartSec=10

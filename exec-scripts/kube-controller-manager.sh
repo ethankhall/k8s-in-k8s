@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat <<EOF > /etc/kubernetes/kubeconfig
+cat <<EOF > /etc/kubernetes/kube-controller-manager.kubeconfig
 apiVersion: v1
 kind: Config
 clusters:
@@ -26,6 +26,6 @@ EOF
   --allocate-node-cidrs=false \
   --cluster-name=kubernetes \
   --leader-elect=true \
-  --kubeconfig /etc/kubernetes/kubeconfig
+  --kubeconfig /etc/kubernetes/kube-controller-manager.kubeconfig \
   --service-cluster-ip-range=10.32.0.0/16 \
   --v=2
