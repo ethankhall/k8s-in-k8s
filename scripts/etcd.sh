@@ -28,9 +28,9 @@ systemctl daemon-reload
 systemctl restart etcd
 systemctl enable etcd
 
-curl -X PUT -d "value={\"Network\":\"10.2.0.0/16\",\"Backend\":{\"Type\":\"vxlan\"}}" "http://localhost:2379/v2/keys/atomic.io/network/config"
-
 while ! rkt status $(cat /var/run/etcd-pod.uuid) | grep state=running; do 
     echo "Waiting for etcd..."
     sleep 10;
 done
+
+curl -X PUT -d "value={\"Network\":\"10.2.0.0/16\",\"Backend\":{\"Type\":\"vxlan\"}}" "http://localhost:2379/v2/keys/atomic.io/network/config"

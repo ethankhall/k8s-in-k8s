@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   (0..1).each do |i|
     config.vm.define vm_name = "centos%d" % i do |box|
       box.vm.provider "vmware_fusion" do |v|
-        v.vmx["memsize"] = "768"
+        v.vmx["memsize"] = "1024"
         v.vmx["numvcpus"] = "1"
       end
 
