@@ -8,6 +8,8 @@ ExecStart=/usr/bin/rkt run \
     --volume=k8s-cert,kind=host,source=/etc/kubernetes/pki,readOnly=true \
     --volume=k8s-cni,kind=host,source=/etc/kubernetes/cni,readOnly=true \
     --volume=docker-lib,kind=host,source=/var/lib/docker,readOnly=false \
+    --volume=kubelet-lib,kind=host,source=/var/lib/kubelet,readOnly=false,recursive=true \
+    --volume=flannel-run,kind=host,source=/run/flannel,readOnly=false \
     --volume dns,kind=host,source=/etc/resolv.conf \
     ${REPO}/kube-control-plane-master:latest \
     --uuid-file-save=/var/run/kube-api-server-pod.uuid \
@@ -20,6 +22,8 @@ ExecStart=/usr/bin/rkt run \
     --mount volume=k8s-cert,target=/etc/kubernetes/pki \
     --mount volume=k8s-cni,target=/etc/kubernetes/cni \
     --mount volume=docker-lib,target=/var/lib/docker \
+    --mount volume=flannel-run,target=/run/flannel \
+    --mount volume=kubelet-lib,target=/var/lib/kubelet \
     --caps-retain=CAP_FOWNER,CAP_SYS_ADMIN \
     --stage1-from-dir=stage1-fly.aci \
     --port=port-10248:10248
@@ -30,6 +34,8 @@ RestartSec=10
 [Install]
 WantedBy=multi-user.target
 EOF
+
+mkdir -p /var/lib/kubelet
 
 systemctl daemon-reload
 

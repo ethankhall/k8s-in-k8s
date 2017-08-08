@@ -10,7 +10,7 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
     echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     echo "http://dl-5.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "http://dl-5.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --no-cache docker curl bash coreutils kubernetes device-mapper && \
+    apk add --no-cache docker curl bash coreutils kubernetes device-mapper util-linux binutils findutils grep && \
     mkdir /etc/kubernetes && \
     mkdir /etc/kubernetes/pki &&  \
     rm /usr/bin/hyperkube /usr/bin/kube-apiserver \

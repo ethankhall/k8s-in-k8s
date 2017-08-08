@@ -83,7 +83,6 @@ then
     }
 fi
 
-
 /usr/bin/kubelet \
   --pod-infra-container-image=gcr.io/google_containers/pause-amd64:3.0 \
   --kubeconfig=/etc/kubernetes/kubelet.conf \
