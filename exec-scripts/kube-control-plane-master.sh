@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+mkdir -p /etc/kubernetes/manifests
+
 cat << EOF > /etc/kubernetes/manifests/kube-proxy.yaml
 apiVersion: v1
 kind: Pod
@@ -11,54 +13,86 @@ spec:
   containers:
   - name: kube-proxy
     image: ${REPO}kube-proxy
+    volumeMounts:
+      - mountPath: /etc/kubernetes/cni
+        name: cni
+      - mountPath: /etc/kubernetes/pki
+        name: pki
     env:
-      - name: MASTER_IP
-        value: ${MASTER_IP}
+      - name: MASTER_URL
+        value: ${MASTER_URL}
     securityContext:
       privileged: true
+  volumes:
+    - name: cni
+      hostPath:
+        # directory location on host
+        path: /etc/kubernetes/cni
+    - name: certs
+      hostPath:
+        # directory location on host
+        path: /etc/kubernetes/pki
 EOF
 
 cat <<EOF > /etc/kubernetes/kubelet.conf
 apiVersion: v1
+kind: Config
 clusters:
-- cluster:
+  - cluster:
       certificate-authority: /etc/kubernetes/pki/ca.pem
       server: ${MASTER_URL}
-  name: kubernetes
+    name: kubernetes
 contexts:
-- context:
-    cluster: kubernetes
-    user: kubelet-csr
-  name: kubelet-csr
-- context:
-    cluster: kubernetes
-    user: tls-bootstrap-token-user
-  name: tls-bootstrap-token-user@kubernetes
-current-context: kubelet-csr
-kind: Config
-preferences: {}
+  - context:
+      cluster: kubernetes
+      user: proxy
+    name: proxy-to-kubernetes
+current-context: proxy-to-kubernetes
 users:
-- name: kubelet-csr
-  user:
-    client-certificate: /etc/kubernetes/pki/worker.pem
-    client-key: /etc/kubernetes/pki/worker-key.pem
-- name: tls-bootstrap-token-user
-  user:
-    token: e68ed6.b92b1770093fdf0b
+  - name: proxy
+    user:
+      client-certificate: /etc/kubernetes/pki/worker.pem
+      client-key: /etc/kubernetes/pki/worker-key.pem
 EOF
+
+dmsetup mknodes
+
+# First, make sure that cgroups are mounted correctly.
+CGROUP=/sys/fs/cgroup
+: {LOG:=stdio}
+
+[ -d $CGROUP ] ||
+	mkdir $CGROUP
+
+mountpoint -q $CGROUP ||
+	mount -n -t tmpfs -o uid=0,gid=0,mode=0755 cgroup $CGROUP || {
+		echo "Could not make a tmpfs mount. Did you use --privileged?"
+		exit 1
+	}
+
+if [ -d /sys/kernel/security ] && ! mountpoint -q /sys/kernel/security
+then
+    mount -t securityfs none /sys/kernel/security || {
+        echo "Could not mount /sys/kernel/security."
+        echo "AppArmor detection and --privileged mode might break."
+    }
+fi
+
 
 /usr/bin/kubelet \
   --pod-infra-container-image=gcr.io/google_containers/pause-amd64:3.0 \
   --kubeconfig=/etc/kubernetes/kubelet.conf \
+  --register-node \
   --require-kubeconfig=true \
   --pod-manifest-path=/etc/kubernetes/manifests \
   --allow-privileged=true \
   --network-plugin=cni \
-  --cni-conf-dir=/etc/cni/net.d \
-  --cni-bin-dir=/opt/cni/bin \
+  --cni-conf-dir=/etc/kubernetes/cni/net.d \
   --cluster-dns=10.96.0.10 \
   --cluster-domain=cluster.local \
   --authorization-mode=Webhook \
   --client-ca-file=/etc/kubernetes/pki/ca.pem \
+  --tls-cert-file=/etc/kubernetes/pki/worker.pem \
+  --tls-private-key-file=/etc/kubernetes/pki/worker-key.pem \
   --cadvisor-port=0 \
-  --cgroup-driver=cgroupfs
+  --v=2

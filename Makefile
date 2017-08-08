@@ -48,7 +48,7 @@ kube-controller-manager.local: kube-controller-manager.docker
 	docker run -it --rm --env MASTER_URL=https://$(MY_IP):6443 $(call make_tag_name,$@)
 
 kube-control-plane-master.local: kube-control-plane-master.docker
-	docker run -it --rm --env -p 10251:10251 ETCD_SERVERS=http://$(MY_IP):2379 --env MASTER_URL=https://$(MY_IP):6443 $(call make_tag_name,$@)
+	docker run -it --rm --env -p 10248:10248 ETCD_SERVERS=http://$(MY_IP):2379 --env MASTER_URL=https://$(MY_IP):6443 $(call make_tag_name,$@)
 
 kube-proxy.local: kube-proxy.docker
 	docker run -it --rm --env MASTER_IP=$(MY_IP) $(call make_tag_name,$@)

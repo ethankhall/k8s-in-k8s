@@ -14,6 +14,6 @@ SELINUX=disabled
 SELINUXTYPE=targeted
 EOF
 
-rkt trust --prefix "quay.io/ethankhall" --skip-fingerprint-review
+rkt trust --prefix "${REPO}" --skip-fingerprint-review
 
 setenforce 0 || true

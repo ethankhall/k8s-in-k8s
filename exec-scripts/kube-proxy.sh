@@ -5,7 +5,7 @@ apiVersion: v1
 kind: Config
 clusters:
   - cluster:
-      certificate-authority: /etc/kubernetes/ca.pem
+      certificate-authority: /etc/kubernetes/pki/ca.pem
       server: ${MASTER_URL}
     name: kubernetes
 contexts:
@@ -17,8 +17,8 @@ current-context: proxy-to-kubernetes
 users:
   - name: proxy
     user:
-      client-certificate: /etc/kubernetes/worker.pem
-      client-key: /etc/kubernetes/worker-key.pem
+      client-certificate: /etc/kubernetes/pki/worker.pem
+      client-key: /etc/kubernetes/pki/worker-key.pem
 EOF
 
 /usr/bin/kube-proxy \

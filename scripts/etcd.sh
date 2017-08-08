@@ -3,7 +3,8 @@
 cat << EOF >/etc/systemd/system/etcd.service
 [Service]
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/etcd-pod.uuid
-ExecStart=/usr/bin/rkt run quay.io/ethankhall/etcd:latest \
+ExecStart=/usr/bin/rkt run \
+    ${REPO}/etcd:latest \
     --uuid-file-save=/var/run/etcd-pod.uuid \
     --environment=MY_IP=172.17.4.100 --environment=INITAL_CLUSTER=etcd0=http://172.17.4.100:2380 \
     --port=port-2380:2380 --port=port-2379:2379
@@ -15,7 +16,7 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-rkt fetch quay.io/ethankhall/etcd:latest
+rkt fetch ${REPO}/etcd:latest
 
 systemctl daemon-reload
 systemctl restart etcd

@@ -10,7 +10,7 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
     echo "http://dl-4.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
     echo "http://dl-5.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     echo "http://dl-5.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
-    apk add --no-cache docker curl bash coreutils kubernetes && \
+    apk add --no-cache docker curl bash coreutils kubernetes device-mapper && \
     mkdir /etc/kubernetes && \
     mkdir /etc/kubernetes/pki &&  \
     rm /usr/bin/hyperkube /usr/bin/kube-apiserver \
@@ -21,7 +21,7 @@ ARG ROOT_CA_IP
 ENV REPO ""
 ENV MASTER_URL "https://127.0.0.1:6443"
 ENV ETCD_SERVERS "http://127.0.0.1:2379"
-EXPOSE 10251
+EXPOSE 10248
 
 COPY exec-scripts/kube-control-plane-master.sh /kube-control-plane-master.sh
 COPY ["certs/$ROOT_CA_IP/ca.pem", "certs/$ROOT_CA_IP/worker.pem", \
