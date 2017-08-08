@@ -54,9 +54,6 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-mkdir -p /etc/kubernetes/pki
-cp /vagrant/certs/${IP_ADDR}/*.pem /etc/kubernetes/pki
-
 systemctl daemon-reload
 
 rkt fetch ${REPO}/kube-api-server:latest

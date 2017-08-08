@@ -19,7 +19,7 @@ kube-apiserver \
     --kubelet-client-key=/etc/kubernetes/pki/worker-key.pem \
     --tls-private-key-file=/etc/kubernetes/pki/apiserver-key.pem \
     --proxy-client-key-file=/etc/kubernetes/pki/worker-key.key \
-    --service-account-key-file=/etc/kubernetes/pki/ca-key.pem \
+    --service-account-key-file=/etc/kubernetes/pki/service-key.pem \
     --advertise-address=${IP_ADDR} \
     --etcd-servers=${ETCD_SERVERS} \
     --runtime-config=admissionregistration.k8s.io/v1alpha1 \

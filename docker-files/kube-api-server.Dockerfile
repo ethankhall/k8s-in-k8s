@@ -25,6 +25,6 @@ EXPOSE 6443
 COPY exec-scripts/apiserver.sh /apiserver.sh
 COPY [ "certs/${ROOT_CA_IP}/ca.pem", "certs/${ROOT_CA_IP}/apiserver.pem", "certs/${ROOT_CA_IP}/worker.pem", \
    "certs/${ROOT_CA_IP}/worker.pem", "certs/${ROOT_CA_IP}/worker-key.pem", "certs/${ROOT_CA_IP}/apiserver-key.pem", \
-   "certs/${ROOT_CA_IP}/ca-key.pem", "/etc/kubernetes/pki/"]
+   "certs/${ROOT_CA_IP}/ca-key.pem", "certs/${ROOT_CA_IP}/service-key.pem", "/etc/kubernetes/pki/"]
 
 ENTRYPOINT /apiserver.sh

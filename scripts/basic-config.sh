@@ -1,7 +1,5 @@
 #!/bin/bash
 
-IP_ADDR=$(hostname -I)
-
 yum-config-manager --add-repo http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 rpm --import https://packages.cloud.google.com/yum/doc/yum-key.gpg
 rpm --import https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg

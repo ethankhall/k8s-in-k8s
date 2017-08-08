@@ -23,6 +23,6 @@ ENV MASTER_URL "https://127.0.0.1:6443"
 
 COPY exec-scripts/kube-controller-manager.sh /kube-controller-manager.sh
 COPY ["certs/$ROOT_CA_IP/ca.pem", "certs/$ROOT_CA_IP/worker.pem", \
-    "certs/$ROOT_CA_IP/worker-key.pem", "/etc/kubernetes/pki/"]"
+    "certs/$ROOT_CA_IP/worker-key.pem", "certs/${ROOT_CA_IP}/service-key.pem", "/etc/kubernetes/pki/"]"
 
 ENTRYPOINT /kube-controller-manager.sh

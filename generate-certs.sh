@@ -44,6 +44,15 @@ cat <<EOF > ca-config.json
                     "server auth",
                     "client auth"
                 ]
+            },
+            "service": {
+                "expiry": "43800h",
+                "usages": [
+                    "signing",
+                    "key encipherment",
+                    "server auth",
+                    "client auth"
+                ]
             }
         }
     }
@@ -127,6 +136,25 @@ echo '{
   ]
 }' | cfssl gencert -ca=ca.pem  -ca-key=ca-key.pem  -config=ca-config.json -profile=client - | cfssljson -bare admin
 
+echo '{
+  "CN": "service.k8s.com",
+  "O": "RoughElectrical",
+  "hosts": [],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "CA",
+      "O": "RoughElectrical",
+      "ST": "San Francisco",
+      "OU": "Rough Electrical"
+    }
+  ]
+}' | cfssl gencert -ca=ca.pem  -ca-key=ca-key.pem  -config=ca-config.json -profile=service - | cfssljson -bare service
+
 cat << EOF > kubeconfig
 apiVersion: v1
 kind: Config
@@ -151,8 +179,7 @@ EOF
 cat << EOF > kubectl-local.sh
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-KUBECONFIG="${KUBECONFIG}:${DIR}/kubeconfig" kubectl --context bootcfg-context "$@"
+KUBECONFIG="${KUBECONFIG}:${CERT_DIR}/kubeconfig" kubectl --context bootcfg-context "\$@"
 EOF
 
 chmod +x kubectl-local.sh

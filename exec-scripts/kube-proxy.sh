@@ -24,6 +24,6 @@ EOF
 /usr/bin/kube-proxy \
     --cluster-cidr=10.200.0.0/16 \
     --masquerade-all=true \
-    --kubeconfig=/etc/kubernetes/kube-proxy.kubeconf \
+    --kubeconfig=/etc/kubernetes/kube-proxy.kubeconfig \
     --proxy-mode=iptables \
     --v=2

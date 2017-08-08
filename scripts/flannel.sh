@@ -34,8 +34,6 @@ cat << EOF > /etc/kubernetes/cni/net.d/10-flannel.conf
 }
 EOF
 
-curl -X PUT -d "value={\"Network\":\"10.2.0.0/16\",\"Backend\":{\"Type\":\"vxlan\"}}" "http://localhost:2379/v2/keys/atomic.io/network/config"
-
 systemctl daemon-reload
 systemctl restart flanneld
 systemctl enable flanneld

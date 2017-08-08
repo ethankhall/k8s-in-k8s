@@ -17,7 +17,9 @@ spec:
       - mountPath: /etc/kubernetes/cni
         name: cni
       - mountPath: /etc/kubernetes/pki
-        name: pki
+        name: certs
+      - mountPath: /var/run/dbus
+        name: dbus-sock
     env:
       - name: MASTER_URL
         value: ${MASTER_URL}
@@ -32,6 +34,9 @@ spec:
       hostPath:
         # directory location on host
         path: /etc/kubernetes/pki
+    - name: dbus-sock
+      hostPath:
+        path: /var/run/dbus
 EOF
 
 cat <<EOF > /etc/kubernetes/kubelet.conf
@@ -95,4 +100,5 @@ fi
   --tls-cert-file=/etc/kubernetes/pki/worker.pem \
   --tls-private-key-file=/etc/kubernetes/pki/worker-key.pem \
   --cadvisor-port=0 \
+  --hostname-override=${NAME} \
   --v=2

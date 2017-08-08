@@ -37,20 +37,26 @@ Vagrant.configure("2") do |config|
         s.privileged = true
         s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'IP_ADDR' => "172.17.4.#{i+100}" }
       end
-    
-      if i == 0
-        box.vm.provision "shell" do |s|
-          s.path = "scripts/control-plane-cluster.sh"
-          s.privileged = true
-          s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'IP_ADDR' => "172.17.4.#{i+100}", 'REPO' => "quay.io/ethankhall" }
-        end
-      end
 
       if i == 0 || i == 1
         box.vm.provision "shell" do |s|
+          s.path = "scripts/cluster-cert.sh"
+          s.privileged = true
+          s.env = { 'CLUSTER_IP' => "172.17.4.100" }
+        end
+
+        if i == 0
+          box.vm.provision "shell" do |s|
+            s.path = "scripts/control-plane-cluster.sh"
+            s.privileged = true
+            s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'IP_ADDR' => "172.17.4.#{i+100}", 'REPO' => "quay.io/ethankhall" }
+          end
+        end
+
+        box.vm.provision "shell" do |s|
           s.path = "scripts/control-plane-cluster-worker.sh"
           s.privileged = true
-          s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'IP_ADDR' => "172.17.4.#{i+100}", 'REPO' => "quay.io/ethankhall" }
+          s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'MASTER_URL' => 'https://172.17.4.100:6443', 'HOST_NAME' => "172.17.4.#{i+100}", 'REPO' => "quay.io/ethankhall" }
         end
       end
 
