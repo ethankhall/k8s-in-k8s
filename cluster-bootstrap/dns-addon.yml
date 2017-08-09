@@ -5,6 +5,27 @@ metadata:
   namespace: kube-system
   labels:
     addonmanager.kubernetes.io/mode: EnsureExists
+data:
+  kubeconfig: |
+    apiVersion: v1
+    clusters:
+    - cluster:
+        certificate-authority: /etc/kubernetes/pki/ca.pem
+        server: https://172.17.4.100:6443
+      name: default-cluster
+    contexts:
+    - context:
+        cluster: default-cluster
+        user: default-admin
+      name: default-system
+    current-context: default-system
+    kind: Config
+    preferences: {}
+    users:
+    - name: default-admin
+      user:
+        client-certificate: /etc/kubernetes/pki/admin.pem
+        client-key: /etc/kubernetes/pki/admin-key.pem
 ---
 apiVersion: v1
 kind: ServiceAccount
@@ -51,6 +72,9 @@ spec:
         configMap:
           name: kube-dns
           optional: true
+      - name: certs
+        hostPath:
+          path: /etc/kubernetes/pki
       containers:
       - name: kubedns
         image: gcr.io/google_containers/k8s-dns-kube-dns-amd64:1.14.4
@@ -86,7 +110,7 @@ spec:
         - --domain=cluster.local.
         - --dns-port=10053
         - --config-dir=/kube-dns-config
-        - --kube-master-url=https://172.17.4.100:6443
+        - --kubecfg-file=/kube-dns-config/kubeconfig
         - --v=2
         env:
         - name: PROMETHEUS_PORT
@@ -104,6 +128,8 @@ spec:
         volumeMounts:
         - name: kube-dns-config
           mountPath: /kube-dns-config
+        - name: certs
+          mountPath: /etc/kubernetes/pki
       - name: dnsmasq
         image: gcr.io/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.4
         livenessProbe:
