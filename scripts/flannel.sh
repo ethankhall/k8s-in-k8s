@@ -28,12 +28,13 @@ After=flanneld.service
 EnvironmentFile=/etc/kubernetes/cni/docker_opts_cni.env
 EOF
 
+mkdir -p /etc/kubernetes/cni/net.d
+
 cat << EOF > /etc/kubernetes/cni/docker_opts_cni.env
 DOCKER_OPT_BIP=""
 DOCKER_OPT_IPMASQ=""
 EOF
 
-mkdir -p /etc/kubernetes/cni/net.d
 cat << EOF > /etc/kubernetes/cni/net.d/10-flannel.conf
 {
     "name": "podnet",
