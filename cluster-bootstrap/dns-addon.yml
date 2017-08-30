@@ -111,7 +111,7 @@ spec:
         - --dns-port=10053
         - --config-dir=/kube-dns-config
         - --kubecfg-file=/kube-dns-config/kubeconfig
-        - --v=2
+        - --v=4
         env:
         - name: PROMETHEUS_PORT
           value: "10055"

@@ -35,7 +35,12 @@ Vagrant.configure("2") do |config|
       box.vm.provision "shell" do |s|
         s.path = "scripts/flannel.sh"
         s.privileged = true
-        s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 'IP_ADDR' => "172.17.4.#{i+100}" }
+        s.env = { 'ETCD_ENDPOINTS' => "http://172.17.4.100:2379" }
+      end
+
+      box.vm.provision "shell" do |s|
+        s.path = "scripts/docker.sh"
+        s.privileged = true
       end
 
       if i == 0 || i == 1

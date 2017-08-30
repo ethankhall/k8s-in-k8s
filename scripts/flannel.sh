@@ -3,7 +3,7 @@
 mkdir -p /etc/systemd/system/flanneld.service.d
 
 cat << EOF > /etc/sysconfig/flanneld
-FLANNEL_IFACE="${IP_ADDR}"
+FLANNEL_OPTIONS="--iface=eth1 -v=3 $FLANNEL_OPTIONS"
 FLANNEL_ETCD_ENDPOINTS="${ETCD_ENDPOINTS}"
 FLANNEL_ETCD_PREFIX="/atomic.io/network"
 EOF
@@ -14,13 +14,7 @@ cat << EOF > /etc/systemd/system/docker.service.d/40-flannel.conf
 Requires=flanneld.service
 After=flanneld.service
 [Service]
-EnvironmentFile=/etc/kubernetes/cni/docker_opts_cni.env
-EOF
-
-mkdir -p /etc/kubernetes/cni
-cat << EOF > /etc/kubernetes/cni/docker_opts_cni.env
-DOCKER_OPT_BIP=""
-DOCKER_OPT_IPMASQ=""
+EnvironmentFile=/run/flannel/docker
 EOF
 
 mkdir -p /etc/kubernetes/cni/net.d
@@ -37,3 +31,5 @@ EOF
 systemctl daemon-reload
 systemctl restart flanneld
 systemctl enable flanneld
+
+systemctl restart docker
