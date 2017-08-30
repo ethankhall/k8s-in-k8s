@@ -33,4 +33,4 @@ while ! rkt status $(cat /var/run/etcd-pod.uuid) | grep state=running; do
     sleep 10;
 done
 
-curl -X PUT -d "value={\"Network\":\"10.2.0.0/16\",\"Backend\":{\"Type\":\"vxlan\"}}" "http://localhost:2379/v2/keys/atomic.io/network/config"
+curl -X PUT -d "value={\"Network\":\"${POD_NETWORK}\",\"Backend\":{\"Type\":\"vxlan\"}}" "http://localhost:2379/v2/keys/atomic.io/network/config"

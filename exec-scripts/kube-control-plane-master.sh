@@ -23,6 +23,8 @@ spec:
     env:
       - name: MASTER_URL
         value: ${MASTER_URL}
+      - name: POD_NETWORK
+        value: ${POD_NETWORK}
     securityContext:
       privileged: true
   volumes:

@@ -17,7 +17,7 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
         /usr/bin/kube-controller-manager /usr/bin/kube-scheduler /usr/bin/kubectl \
         /usr/bin/kubefed /usr/bin/kubeadm /usr/bin/kube-proxy /usr/bin/kube-aggregator && \
     mkdir -p /opt/cni/bin && \
-    curl -L https://github.com/containernetworking/cni/releases/download/v0.5.2/cni-amd64-v0.5.2.tgz | tar xvz -C /opt/cni/bin
+    curl -L https://github.com/containernetworking/cni/releases/download/v0.6.0/cni-amd64-v0.6.0.tgz | tar xvz -C /opt/cni/bin
 
 ARG ROOT_CA_IP
 ENV REPO ""

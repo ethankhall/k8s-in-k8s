@@ -17,6 +17,7 @@ ExecStart=/usr/bin/rkt run \
     --environment=MASTER_URL=${MASTER_URL} \
     --environment=REPO=${REPO}/ \
     --environment=NAME=${HOST_NAME} \
+    --environment=POD_NETWORK=${POD_NETWORK} \
     --mount volume=system-run,target=/var/run \
     --mount volume=dns,target=/etc/resolv.conf \
     --mount volume=k8s-cert,target=/etc/kubernetes/pki \
@@ -24,7 +25,7 @@ ExecStart=/usr/bin/rkt run \
     --mount volume=docker-lib,target=/var/lib/docker \
     --mount volume=flannel-run,target=/run/flannel \
     --mount volume=kubelet-lib,target=/var/lib/kubelet \
-    --caps-retain=CAP_FOWNER,CAP_SYS_ADMIN \
+    --caps-retain=CAP_FOWNER,CAP_SYS_ADMIN,CAP_NET_ADMIN \
     --stage1-from-dir=stage1-fly.aci \
     --port=port-10248:10248
 ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kube-control-plane-master-pod.uuid

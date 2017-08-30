@@ -19,6 +19,7 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
 
 ARG ROOT_CA_IP
 ENV MASTER_URL "https://127.0.0.1:6443"
+ENV POD_NETWORK 10.2.0.0/16
 
 COPY exec-scripts/kube-proxy.sh /kube-proxy.sh
 COPY ["certs/$ROOT_CA_IP/ca.pem", "certs/$ROOT_CA_IP/worker.pem", \
