@@ -19,6 +19,12 @@ Vagrant.configure("2") do |config|
       box.vm.network :private_network, ip: "172.17.4.#{i+100}"
 
       box.vm.provision "shell" do |s|
+        s.path = "scripts/networking.sh"
+        s.privileged = true
+        s.env = { 'IP_ADDR' => "172.17.4.#{i+100}" }
+      end
+
+      box.vm.provision "shell" do |s|
         s.path = "scripts/basic-config.sh"
         s.privileged = true
         s.env = { 'REPO' => "quay.io/ethankhall" }
@@ -65,16 +71,18 @@ Vagrant.configure("2") do |config|
           end
         end
 
-        box.vm.provision "shell" do |s|
-          s.path = "scripts/control-plane-cluster-worker.sh"
-          s.privileged = true
-          s.env = { 
-            'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 
-            'MASTER_URL' => 'https://172.17.4.100:6443', 
-            'HOST_NAME' => "172.17.4.#{i+100}", 
-            'REPO' => "quay.io/ethankhall",
-            'POD_NETWORK' => "10.2.0.0/16"
-          }
+        if i == 1
+          box.vm.provision "shell" do |s|
+            s.path = "scripts/control-plane-cluster-worker.sh"
+            s.privileged = true
+            s.env = { 
+              'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 
+              'MASTER_URL' => 'https://172.17.4.100:6443', 
+              'HOST_NAME' => "172.17.4.#{i+100}", 
+              'REPO' => "quay.io/ethankhall",
+              'POD_NETWORK' => "10.2.0.0/16"
+            }
+          end
         end
       end
 

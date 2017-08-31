@@ -102,4 +102,4 @@ fi
   --tls-private-key-file=/etc/kubernetes/pki/worker-key.pem \
   --cadvisor-port=0 \
   --hostname-override=${NAME} \
-  --v=2
+  --v=${VERBOSE_LEVEL}

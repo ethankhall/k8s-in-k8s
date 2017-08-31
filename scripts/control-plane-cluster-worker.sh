@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat << EOF >/etc/systemd/system/kube-control-plane-master.service
+cat << EOF > /etc/systemd/system/kube-control-plane-master.service
 [Service]
 ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kube-control-plane-master-pod.uuid
 ExecStart=/usr/bin/rkt run \
@@ -17,6 +17,7 @@ ExecStart=/usr/bin/rkt run \
     --environment=MASTER_URL=${MASTER_URL} \
     --environment=REPO=${REPO}/ \
     --environment=NAME=${HOST_NAME} \
+    --environment=VERBOSE_LEVEL=2 \
     --environment=POD_NETWORK=${POD_NETWORK} \
     --mount volume=system-run,target=/var/run \
     --mount volume=dns,target=/etc/resolv.conf \
