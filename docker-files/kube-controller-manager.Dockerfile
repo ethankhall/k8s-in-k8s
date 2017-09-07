@@ -20,6 +20,7 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
 ARG ROOT_CA_IP
 RUN mkdir /etc/kubernetes/manifests
 ENV MASTER_URL "https://127.0.0.1:6443"
+ENV SERVICE_CLUSTER "10.3.0.0/24"
 
 COPY exec-scripts/kube-controller-manager.sh /kube-controller-manager.sh
 COPY ["certs/$ROOT_CA_IP/ca.pem", "certs/$ROOT_CA_IP/worker.pem", \

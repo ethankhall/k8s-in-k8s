@@ -20,6 +20,7 @@ RUN echo "http://dl-1.alpinelinux.org/alpine/edge/community" >> /etc/apk/reposit
 ARG ROOT_CA_IP
 ENV IP_ADDR "127.0.0.1"
 ENV ETCD_SERVERS "http://127.0.0.1:2379"
+ENV SERVICE_CLUSTER "10.3.0.0/24"
 EXPOSE 6443
 
 COPY exec-scripts/apiserver.sh /apiserver.sh

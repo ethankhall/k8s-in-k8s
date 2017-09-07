@@ -18,11 +18,11 @@ Vagrant.configure("2") do |config|
 
       box.vm.network :private_network, ip: "172.17.4.#{i+100}"
 
-      box.vm.provision "shell" do |s|
-        s.path = "scripts/networking.sh"
-        s.privileged = true
-        s.env = { 'IP_ADDR' => "172.17.4.#{i+100}" }
-      end
+      # box.vm.provision "shell" do |s|
+      #   s.path = "scripts/networking.sh"
+      #   s.privileged = true
+      #   s.env = { 'IP_ADDR' => "172.17.4.#{i+100}" }
+      # end
 
       box.vm.provision "shell" do |s|
         s.path = "scripts/basic-config.sh"

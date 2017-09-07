@@ -28,5 +28,5 @@ EOF
   --leader-elect=true \
   --kubeconfig /etc/kubernetes/kube-controller-manager.kubeconfig \
   --service-account-private-key-file=/etc/kubernetes/pki/service-key.pem \
-  --service-cluster-ip-range=10.32.0.0/16 \
+  --service-cluster-ip-range=${SERVICE_CLUSTER} \
   --v=2

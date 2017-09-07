@@ -25,6 +25,7 @@ ENV REPO ""
 ENV MASTER_URL "https://127.0.0.1:6443"
 ENV ETCD_SERVERS "http://127.0.0.1:2379"
 ENV VERBOSE_LEVEL 2
+ENV DNS_SERVICE_IP "10.3.0.10"
 EXPOSE 10248
 
 COPY exec-scripts/kubelet.sh /kubelet.sh

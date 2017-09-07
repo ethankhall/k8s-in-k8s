@@ -2,7 +2,7 @@
 
 kube-apiserver \
     --requestheader-allowed-names=kubelet.k8s.com,kube-apiserver.k8s.com,admin.k8s.com \
-    --service-cluster-ip-range=10.96.0.0/12 \
+    --service-cluster-ip-range=${SERVICE_CLUSTER} \
     --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname \
     --requestheader-username-headers=X-Remote-User \
     --requestheader-extra-headers-prefix=X-Remote-Extra- \

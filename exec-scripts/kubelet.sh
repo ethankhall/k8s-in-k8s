@@ -94,7 +94,7 @@ fi
   --allow-privileged=true \
   --network-plugin=cni \
   --cni-conf-dir=/etc/kubernetes/cni/net.d \
-  --cluster-dns=10.96.0.10 \
+  --cluster-dns=${DNS_SERVICE_IP} \
   --cluster-domain=cluster.local \
   --authorization-mode=Webhook \
   --client-ca-file=/etc/kubernetes/pki/ca.pem \
