@@ -20,3 +20,6 @@ rkt trust --prefix "${REPO}" --skip-fingerprint-review
 usermod -a -G docker vagrant
 
 setenforce 0 || true
+
+# Set default iptables rule to be forward
+iptables -P FORWARD ACCEPT
