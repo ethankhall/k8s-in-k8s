@@ -26,9 +26,9 @@ certs/$(MY_IP).keep:
 %.push: certs/$(MY_IP).keep
 	docker push $(call make_tag_name,$@)
 
-all: certs/$(MY_IP).keep kube-api-server.docker etcd.docker kube-controller-manager.docker kube-control-plane-master.docker kube-proxy.docker kube-scheduler.docker
+all: certs/$(MY_IP).keep kube-api-server.docker etcd.docker kube-controller-manager.docker kubelet.docker kube-proxy.docker kube-scheduler.docker
 
-push: all kube-api-server.push etcd.push kube-controller-manager.push kube-control-plane-master.push kube-proxy.push kube-scheduler.push
+push: all kube-api-server.push etcd.push kube-controller-manager.push kubelet.push kube-proxy.push kube-scheduler.push
 
 clean:
 	rm -rf certs
@@ -47,7 +47,7 @@ etcd.local: etcd.docker
 kube-controller-manager.local: kube-controller-manager.docker
 	docker run -it --rm --env MASTER_URL=https://$(MY_IP):6443 $(call make_tag_name,$@)
 
-kube-control-plane-master.local: kube-control-plane-master.docker
+kubelet.local: kubelet.docker
 	docker run -it --rm --env -p 10248:10248 ETCD_SERVERS=http://$(MY_IP):2379 --env MASTER_URL=https://$(MY_IP):6443 $(call make_tag_name,$@)
 
 kube-proxy.local: kube-proxy.docker

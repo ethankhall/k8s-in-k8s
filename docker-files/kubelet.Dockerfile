@@ -27,8 +27,8 @@ ENV ETCD_SERVERS "http://127.0.0.1:2379"
 ENV VERBOSE_LEVEL 2
 EXPOSE 10248
 
-COPY exec-scripts/kube-control-plane-master.sh /kube-control-plane-master.sh
+COPY exec-scripts/kubelet.sh /kubelet.sh
 COPY ["certs/$ROOT_CA_IP/ca.pem", "certs/$ROOT_CA_IP/worker.pem", \
     "certs/$ROOT_CA_IP/worker-key.pem", "/etc/kubernetes/pki/"]"
 
-ENTRYPOINT /kube-control-plane-master.sh
+ENTRYPOINT /kubelet.sh

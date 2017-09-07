@@ -1,8 +1,8 @@
 #!/bin/bash
 
-cat << EOF > /etc/systemd/system/kube-control-plane-master.service
+cat << EOF > /etc/systemd/system/kubelet.service
 [Service]
-ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kube-control-plane-master-pod.uuid
+ExecStartPre=-/usr/bin/rkt rm --uuid-file=/var/run/kubelet-pod.uuid
 ExecStart=/usr/bin/rkt run \
     --volume=system-run,kind=host,source=/var/run,readOnly=false \
     --volume=k8s-cert,kind=host,source=/etc/kubernetes/pki,readOnly=true \
@@ -11,7 +11,7 @@ ExecStart=/usr/bin/rkt run \
     --volume=kubelet-lib,kind=host,source=/var/lib/kubelet,readOnly=false,recursive=true \
     --volume=flannel-run,kind=host,source=/run/flannel,readOnly=false \
     --volume dns,kind=host,source=/etc/resolv.conf \
-    ${REPO}/kube-control-plane-master:latest \
+    ${REPO}/kubelet:latest \
     --uuid-file-save=/var/run/kube-api-server-pod.uuid \
     --environment=ETCD_SERVERS=${ETCD_ENDPOINTS} \
     --environment=MASTER_URL=${MASTER_URL} \
@@ -29,7 +29,7 @@ ExecStart=/usr/bin/rkt run \
     --caps-retain=CAP_FOWNER,CAP_SYS_ADMIN,CAP_NET_ADMIN \
     --stage1-from-dir=stage1-fly.aci \
     --port=port-10248:10248
-ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kube-control-plane-master-pod.uuid
+ExecStop=-/usr/bin/rkt stop --uuid-file=/var/run/kubelet-pod.uuid
 Restart=always
 RestartSec=10
 
@@ -41,6 +41,6 @@ mkdir -p /var/lib/kubelet
 
 systemctl daemon-reload
 
-rkt fetch ${REPO}/kube-control-plane-master:latest
-systemctl restart kube-control-plane-master
-systemctl enable kube-control-plane-master
+rkt fetch ${REPO}/kubelet:latest
+systemctl restart kubelet
+systemctl enable kubelet

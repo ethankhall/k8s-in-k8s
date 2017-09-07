@@ -1,5 +1,4 @@
 #!/bin/bash
-
 yum install -y systemd-networkd systemd-resolved
 
 mkdir -p /etc/systemd/network
@@ -18,7 +17,10 @@ Name=eth1
 
 [Network]
 Address=${IP_ADDR}/24
+
+[Route]
 Gateway=172.17.4.1
+Destination=172.17.4.0/24
 EOF
 
 systemctl daemon-reload

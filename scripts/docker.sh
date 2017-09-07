@@ -12,7 +12,7 @@ Type=notify
 # the default is not to use systemd for cgroups because the delegate issues still
 # exists and systemd currently does not support the cgroup feature set required
 # for containers run by docker
-ExecStart=/usr/bin/dockerd \$DOCKER_SELINUX \$DOCKER_OPTS \$DOCKER_CGROUPS \$DOCKER_OPT_BIP \$DOCKER_OPT_MTU \$DOCKER_OPT_IPMASQ
+ExecStart=/usr/bin/dockerd \$DOCKER_SELINUX \$DOCKER_OPTS \$DOCKER_CGROUPS \$DOCKER_OPT_MTU
 ExecReload=/bin/kill -s HUP $MAINPID
 # Having non-zero Limit*s causes performance problems due to accounting overhead
 # in the kernel. We recommend using cgroups to do container-local accounting.

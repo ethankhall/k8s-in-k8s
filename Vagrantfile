@@ -73,7 +73,7 @@ Vagrant.configure("2") do |config|
 
         if i == 1
           box.vm.provision "shell" do |s|
-            s.path = "scripts/control-plane-cluster-worker.sh"
+            s.path = "scripts/kubelet.sh"
             s.privileged = true
             s.env = { 
               'ETCD_ENDPOINTS' => "http://172.17.4.100:2379", 
